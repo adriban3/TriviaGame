@@ -41,7 +41,11 @@ var trivia = {
     gameplay: function() {
 
         //create counter equal to question and answer number
-        var i = 0;
+        var i = 1;
+
+        //initial first question and buttons
+        $("#q").html(trivia.q[0]);
+        $("#a").html("<button id=true>True</button> <button id=false>False</button>")
 
         //set interval for game to run on
         setInterval( function() {
@@ -50,68 +54,45 @@ var trivia = {
             $("#q").html(trivia.q[i]);
 
             //create true and false buttons for user to select answer
-            $("#a").html("<button class=true>True</button> <button class=false>False</button>");
+            $("#a").html("<button id=true>True</button> <button id=false>False</button>");
 
             //if statements to check if user selected true or false and whether or not chosen answer is correct
-            if ($(".true").click()) {
+            $(document).on("click", "button", function() {
 
                 //printing right answer message (ram) if correct answer chosen
-                if (trivia.a[i] === "true") {
+                if (trivia.a[i] === event.target.id) {
                     $("#m").html(trivia.messages[0]);
 
                     //appending final answer message prompting user to restart the game, clearing interval to stop game from running again once all questions have been asked
-                    if (i === trivia.q.length - 1) {
+                    if (i === trivia.q.length) {
                         $("#m").append(trivia.messages[3]);
                         clearInterval();
                     }
                 }
 
-                //printing wrong answer message (wam) if wrong answer chosen
-                else {
-                    $("#m").html(trivia.messages[1]);
-
-                    if (i === trivia.q.length -1) {
-                        $("#m").append(trivia.messages[3]);
-                        clearInterval();
-                    }
-                }
-            }
-
-            else if ($(".false").click()) {
-
-                if (trivia.a[i] === "false") {
-                    $("#m").html(trivia.messages[0]); 
+                else if (!(trivia.a[i] === event.target.id) && event.target.id) {
+                    $("#m").html(trivia.messages[1]); 
                     
-                    if (i === trivia.q.length -1) {
+                    if (i === trivia.q.length) {
                         $("#m").append(trivia.messages[3]);
                         clearInterval();
                     }
                 }
 
-                else {
-                    $("#m").html(trvia.messages[1]);
+                else if (!event.target.id) {
+                    $("#m").html(trivia.messages[2]);
 
-                    if (i === trivia.q.length -1) {
+                    if (i === trivia.q.length) {
                         $("#m").append(trivia.messages[3]);
                         clearInterval();
                     }
                 }
-            }
-
-            else {
-
-                $("#m").html(trivia.messages[2]);
-
-                if (i === trivia.q.length -1) {
-                    $("#m").append(trivia.messages[3]);
-                    clearInterval();
-                }
-            }
+            })
             
             //iterate counter to move onto next question/answer pair
             i++;
 
-        }, 3000)
+        }, 30000)
     }
 }
 
