@@ -55,7 +55,7 @@ var trivia = {
             $("#a").html("<button class=true>True</button> <button class=false>False</button>");
 
             //start timer for thirty seconds after question is printed on screen; calls timeUp method if time runs out
-            setTimeout(function() { this.timeUp() }, 1000 * 30);
+            setTimeout(function() { trivia.timeUp() }, 1000 * 30);
 
             //if statements to check if user selected true or false and whether or not chosen answer is correct
             if ($(".true").click()) {
