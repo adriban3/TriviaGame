@@ -106,7 +106,7 @@ var trivia = {
                 }
             })
 
-            //setTimeout to run gamemessage in case user doesn't choose an answer within 30 seconds
+            //setTimeout to run gamemessage in case user doesn't choose an answer within 30 seconds //this line is breaking everything
             setTimeout(trivia.gamemessage(i, eti), 1000 *30);
 
             //iterate counter to move onto next question/answer pair
