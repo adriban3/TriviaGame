@@ -37,23 +37,31 @@ var trivia = {
         "Game over, see results below.  Would you like to play again?",
     ],
 
-    gamelogic: function(i) {
-
-        //create empty variable to hold event target
-        var eti;
+    //method to display message if no answer chosen
+    gamemessage: function(i, eti) {
         
-        setInterval( function() {
+        //write times out message (tom) if event.target.id from last iteration is empty
+        if (!eti) {
+            $("#m").html(trivia.messages[2]);
 
-            //write times out message (tom) if event.target.id from last iteration is empty
-            if (!eti) {
-                $("#m").html(trivia.messages[2]);
-
-                if (i === trivia.q.length) {
-                    $("#m").append(trivia.messages[3]);
-                    clearInterval();
-                }
+            if (i === trivia.q.length) {
+                $("#m").append(trivia.messages[3]);
             }
 
+            else {
+                setTimeout(trivia.gamelogic(i, eti), 1000*5);
+            }
+        }
+
+        else {
+            setTimeout(trivia.gamelogic(i, eti), 1000*5);
+        }
+    },
+
+    gamelogic: function(i, eti) {
+
+        while (i <= trivia.q.length) {
+            
             //clear eti variable for next iteration
             eti = "";
 
@@ -77,7 +85,10 @@ var trivia = {
                     //appending final answer message prompting user to restart the game, clearing interval to stop game from running again once all questions have been asked
                     if (i === trivia.q.length) {
                         $("#m").append(trivia.messages[3]);
-                        clearInterval();
+                    }
+
+                    else {
+                        trivia.gamemessage(i, eti);
                     }
                 }
 
@@ -87,25 +98,35 @@ var trivia = {
                     
                     if (i === trivia.q.length) {
                         $("#m").append(trivia.messages[3]);
-                        clearInterval();
+                    }
+
+                    else {
+                        trivia.gamemessage(i, eti);
                     }
                 }
             })
 
+            //setTimeout to run gamemessage in case user doesn't choose an answer within 30 seconds
+            setTimeout(trivia.gamemessage(i, eti), 1000 *30);
+
             //iterate counter to move onto next question/answer pair
             i++;
-
-        }, 3000)
+        }
     },
 
     //define gameplay method
     gameplay: function() {
 
+        //create empty variable to hold event target
+        var eti;
+
         //create counter equal to question and answer number
         var i = 0;
 
+        $("#m").empty();
+
         //call gamelogic method
-        trivia.gamelogic(i);
+        trivia.gamelogic(i, eti);
     }
 }
 
