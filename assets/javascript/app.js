@@ -38,7 +38,10 @@ var trivia = {
     ],
 
     //method to display message if no answer chosen
-    gamemessage: function(i, eti) {
+    gamemessage: function(i, eti, sTo) {
+
+        //clear timer
+        clearTimeout(sTo);
         
         //write times out message (tom) if event.target.id from last iteration is empty
         if (!eti) {
@@ -49,16 +52,16 @@ var trivia = {
             }
 
             else {
-                setTimeout(trivia.gamelogic(i, eti), 1000*5);
+                setTimeout(trivia.gamelogic(i, eti, sTo), 1000*5);
             }
         }
 
         else {
-            setTimeout(trivia.gamelogic(i, eti), 1000*5);
+            setTimeout(trivia.gamelogic(i, eti, sTo), 1000*5);
         }
     },
 
-    gamelogic: function(i, eti) {
+    gamelogic: function(i, eti, sTo) {
 
         while (i <= trivia.q.length) {
             
@@ -77,8 +80,13 @@ var trivia = {
             //if statements to check if user selected true or false and whether or not chosen answer is correct
             $(document).on("click", "button", function() {
 
-                //printing right answer message (ram) if correct answer chosen
+                //clear timer
+                clearTimeout(sTo);
+
+                //setting variable equal to click event so that it can cleared later on
                 eti = event.target.id;
+
+                //printing right answer message (ram) if correct answer chosen
                 if (trivia.a[i] === eti) {
                     $("#m").html(trivia.messages[0]);
 
@@ -88,7 +96,7 @@ var trivia = {
                     }
 
                     else {
-                        trivia.gamemessage(i, eti);
+                        trivia.gamemessage(i, eti, sTo);
                     }
                 }
 
@@ -101,13 +109,13 @@ var trivia = {
                     }
 
                     else {
-                        trivia.gamemessage(i, eti);
+                        trivia.gamemessage(i, eti, sTo);
                     }
                 }
             })
 
             //setTimeout to run gamemessage in case user doesn't choose an answer within 30 seconds //this line is breaking everything
-            setTimeout(trivia.gamemessage(i, eti), 1000 *30);
+            var sTo = setTimeout(trivia.gamemessage(i, eti, sTo), 1000 *30);
 
             //iterate counter to move onto next question/answer pair
             i++;
@@ -116,6 +124,9 @@ var trivia = {
 
     //define gameplay method
     gameplay: function() {
+
+        //create timer variable to be updated in child functions
+        var sTo;
 
         //create empty variable to hold event target
         var eti;
@@ -126,7 +137,7 @@ var trivia = {
         $("#m").empty();
 
         //call gamelogic method
-        trivia.gamelogic(i, eti);
+        trivia.gamelogic(i, eti, sTo);
     }
 }
 
