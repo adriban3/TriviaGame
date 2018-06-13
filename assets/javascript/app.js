@@ -38,7 +38,9 @@ var trivia = {
     ],
 
     gamelogic: function(i) {
-
+        
+        setInterval( function() {
+ 
         //create empty variable to hold event target
         var eti;
 
@@ -86,19 +88,18 @@ var trivia = {
 
         //iterate counter to move onto next question/answer pair
         i++;
+
+    }, 3000)
     },
 
     //define gameplay method
     gameplay: function() {
 
-        //run game for first question before timer starts
-        trivia.gamelogic(0);
-
         //create counter equal to question and answer number
-        var i = 1;
+        var i = 0;
 
-        //set interval for game to run on
-        setInterval( trivia.gamelogic(i), 3000)
+        //call gamelogic method
+        trivia.gamelogic(i);
     }
 }
 
