@@ -99,6 +99,7 @@ var trivia = {
             }
 
             else {
+
                 $("#m").html(trivia.messages[2]);
 
                 if (i === trivia.q.length -1) {
@@ -110,7 +111,7 @@ var trivia = {
             //iterate counter to move onto next question/answer pair
             i++;
 
-        }, 30000)
+        }, 3000)
     }
 }
 
