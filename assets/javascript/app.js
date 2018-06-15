@@ -80,6 +80,8 @@ var trivia = {
     },
 
     printMessage: function(i, answer, timer) {
+        //clearTimeout from function call
+        clearTimeout(timer);
 
         //if no answer chosen print times up answer message
         if (!answer) {
@@ -100,21 +102,14 @@ var trivia = {
         answer = undefined;
 
         //call next function in gameplay sequence on timer so user can read message and prepare for next question
-        setTimeout(function () {trivia.reset(i, answer, timer)}, 3*1000);
+        timer = setTimeout(function () {trivia.reset(i, answer, timer)}, 3*1000);
     },
 
     reset: function(i, answer, timer) {
 
-        // //if on last question then reset game
-        // if (i === trivia.q.length) {
-        //     $("#m").text(trivia.messages[3]);
-        //     setTimeout(trivia.gameStart(), 3*1000);
-        // }
-        // //if not on last question then call next question
-        // else if (!(i === trivia.q.length)) {
-        //     i++;
-        //     trivia.printQuestion(i, answer, timer);
-        // }
+        //clearTimeout from function call
+        clearTimeout(timer);
+
         //clear message for next question
         $("#m").empty()
 
