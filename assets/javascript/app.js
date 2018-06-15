@@ -37,109 +37,99 @@ var trivia = {
         "Game over, see results below.  Would you like to play again?",
     ],
 
-    //method to display message if no answer chosen
-    gamemessage: function(i, eti, sTo) {
+    //gamestart method to start game and initialize variables
+    gameStart: function() {
 
-        //clear timer
-        clearTimeout(sTo);
-        
-        //write times out message (tom) if event.target.id from last iteration is empty
-        if (!eti) {
-            $("#m").html(trivia.messages[2]);
-
-            if (i === trivia.q.length) {
-                $("#m").append(trivia.messages[3]);
-            }
-
-            else {
-                setTimeout(trivia.gamelogic(i, eti, sTo), 1000*5);
-            }
-        }
-
-        else {
-            setTimeout(trivia.gamelogic(i, eti, sTo), 1000*5);
-        }
-    },
-
-    gamelogic: function(i, eti, sTo) {
-
-        while (i <= trivia.q.length) {
-            
-            //clear eti variable for next iteration
-            eti = "";
-
-            //clear message from screen for next iteration
-            $("#m").empty();
-
-            //adding each question to questions div in HTML
-            $("#q").html(trivia.q[i]);
-
-            //create true and false buttons for user to select answer
-            $("#a").html("<button id=true>True</button> <button id=false>False</button>");
-
-            //if statements to check if user selected true or false and whether or not chosen answer is correct
-            $(document).on("click", "button", function() {
-
-                //clear timer
-                clearTimeout(sTo);
-
-                //setting variable equal to click event so that it can cleared later on
-                eti = event.target.id;
-
-                //printing right answer message (ram) if correct answer chosen
-                if (trivia.a[i] === eti) {
-                    $("#m").html(trivia.messages[0]);
-
-                    //appending final answer message prompting user to restart the game, clearing interval to stop game from running again once all questions have been asked
-                    if (i === trivia.q.length) {
-                        $("#m").append(trivia.messages[3]);
-                    }
-
-                    else {
-                        trivia.gamemessage(i, eti, sTo);
-                    }
-                }
-
-                //printing wrong answer message (wam) if incorrect answer chosen
-                else if (!(trivia.a[i] === eti) && eti) {
-                    $("#m").html(trivia.messages[1]); 
-                    
-                    if (i === trivia.q.length) {
-                        $("#m").append(trivia.messages[3]);
-                    }
-
-                    else {
-                        trivia.gamemessage(i, eti, sTo);
-                    }
-                }
-            })
-
-            //setTimeout to run gamemessage in case user doesn't choose an answer within 30 seconds //this line is breaking everything
-            var sTo = setTimeout(trivia.gamemessage(i, eti, sTo), 1000 *30);
-
-            //iterate counter to move onto next question/answer pair
-            i++;
-        }
-    },
-
-    //define gameplay method
-    gameplay: function() {
-
-        //create timer variable to be updated in child functions
-        var sTo;
-
-        //create empty variable to hold event target
-        var eti;
-
-        //create counter equal to question and answer number
+        //counter variable to be iterated through
         var i = 0;
 
-        $("#m").empty();
+        //variable for user answer to be stored in through each iteration
+        var answer;
 
-        //call gamelogic method
-        trivia.gamelogic(i, eti, sTo);
+        //variable for timer so that timer can be cleared if necessary
+        var timer;
+
+        //call the next function in the game sequence to print questions
+        $("#a").on("click", function() {trivia.printQuestion(i, answer, timer)});
+    },   
+
+    //printQuestion method to print each question in the questions property
+    printQuestion: function(i, answer, timer) {
+
+        //print question referencing the current iteration of the gameplay sequence
+        $("#q").text(trivia.q[i]);
+
+        //display true/false buttons for user response
+        $("#a").html("<button id='true'>True</button> <button id='false'>False</button>");
+
+        //call next function in game sequence to start timer, and receive user answer
+        trivia.startTimer(i, answer, timer);
+    },
+
+    startTimer: function(i, answer, timer) {
+
+        //receive user answer
+        $("button").on("click", function() {
+            answer = $("button").attr('id');
+            console.log(answer);
+        });
+        
+        //start timer to call next function in thirty seconds if user does not respond in time
+        timer = setTimeout(function () {trivia.printMessage(i, answer, timer)}, 1000*30);
+
+        //if user does respond in time, clear timer set above and immediately call next function to print message
+        if (answer) {
+            clearTimeout(timer);
+            trivia.printMessage(i, answer, timer);
+        }
+    },
+
+    printMessage: function(i, answer, timer) {
+
+        //if correct answer print correct answer message
+        if (answer === trivia.a[i]) {
+            $("#m").text(trivia.messages[0]);
+        }
+
+        //if incorrect answer print incorrect answer message
+        else if (!(answer === trivia.a[i])) {
+            $("#m").text(trivia.messages[1]);
+        }
+
+        //if no answer chosen print times up answer message
+        else if (!answer) {
+            $("#m").text(trivia.messages[2]);
+        }
+
+        //clear answer value for next iteration
+        answer = undefined;
+
+        //call next function in gameplay sequence on timer so user can read message and prepare for next question
+        setTimeout(function () {trivia.reset(i, answer, timer)}, 3*1000);
+    },
+
+    reset: function(i, answer, timer) {
+
+        // //if on last question then reset game
+        // if (i === trivia.q.length) {
+        //     $("#m").text(trivia.messages[3]);
+        //     setTimeout(trivia.gameStart(), 3*1000);
+        // }
+        // //if not on last question then call next question
+        // else if (!(i === trivia.q.length)) {
+        //     i++;
+        //     trivia.printQuestion(i, answer, timer);
+        // }
+
+        if (i === trivia.q.length) {
+            $("#m").text(trivia.messages[3]);
+        }
+
+        else if (!(i === trivia.q.length)) {
+            i++;
+            trivia.printQuestion(i, answer, timer);
+        }
     }
 }
 
-//run game when page is fully loaded
-$(document).ready(trivia.gameplay());
+trivia.gameStart();
