@@ -70,35 +70,30 @@ var trivia = {
 
         //receive user answer
         $("button").on("click", function() {
-            answer = $("button").attr('id');
-            console.log(answer);
+            answer = event.target.id;
+            clearTimeout(timer);
+            trivia.printMessage(i, answer, timer);
         });
         
         //start timer to call next function in thirty seconds if user does not respond in time
         timer = setTimeout(function () {trivia.printMessage(i, answer, timer)}, 1000*30);
-
-        //if user does respond in time, clear timer set above and immediately call next function to print message
-        if (answer) {
-            clearTimeout(timer);
-            trivia.printMessage(i, answer, timer);
-        }
     },
 
     printMessage: function(i, answer, timer) {
 
+        //if no answer chosen print times up answer message
+        if (!answer) {
+            $("#m").text(trivia.messages[2]);
+        }
+
         //if correct answer print correct answer message
-        if (answer === trivia.a[i]) {
+        else if (answer === trivia.a[i]) {
             $("#m").text(trivia.messages[0]);
         }
 
         //if incorrect answer print incorrect answer message
-        else if (!(answer === trivia.a[i])) {
+        else if (answer && !(answer === trivia.a[i])) {
             $("#m").text(trivia.messages[1]);
-        }
-
-        //if no answer chosen print times up answer message
-        else if (!answer) {
-            $("#m").text(trivia.messages[2]);
         }
 
         //clear answer value for next iteration
@@ -120,7 +115,10 @@ var trivia = {
         //     i++;
         //     trivia.printQuestion(i, answer, timer);
         // }
+        //clear message for next question
+        $("#m").empty()
 
+        //determine if game should be iterated with next question or ended
         if (i === trivia.q.length) {
             $("#m").text(trivia.messages[3]);
         }
