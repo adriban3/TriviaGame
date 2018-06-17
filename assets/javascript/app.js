@@ -37,17 +37,17 @@ var trivia = {
         "Game over, see results below.  Would you like to play again?",
     ],
 
+    //counter variable to be iterated through
+    i: 0,
+
+    //variable for user answer to be stored in through each iteration
+    answer: undefined,
+
+    //variable for timer so that timer can be cleared if necessary
+    timer: undefined,
+
     //gamestart method to start game and initialize variables
-    gameStart: function() {
-
-        //counter variable to be iterated through
-        var i = 0;
-
-        //variable for user answer to be stored in through each iteration
-        var answer;
-
-        //variable for timer so that timer can be cleared if necessary
-        var timer;
+    gameStart: function(i, answer, timer) {
 
         //call the next function in the game sequence to print questions
         $("#a").on("click", function() {trivia.printQuestion(i, answer, timer)});
@@ -68,15 +68,16 @@ var trivia = {
 
     startTimer: function(i, answer, timer) {
 
+        //start timer to call next function in thirty seconds if user does not respond in time
+        timer = setTimeout(function () {trivia.printMessage(i, answer, timer)}, 1000*10);
+
         //receive user answer
         $("button").on("click", function() {
             answer = event.target.id;
             clearTimeout(timer);
             trivia.printMessage(i, answer, timer);
         });
-        
-        //start timer to call next function in thirty seconds if user does not respond in time
-        timer = setTimeout(function () {trivia.printMessage(i, answer, timer)}, 1000*30);
+    
     },
 
     printMessage: function(i, answer, timer) {
@@ -98,9 +99,6 @@ var trivia = {
             $("#m").text(trivia.messages[1]);
         }
 
-        //clear answer value for next iteration
-        answer = undefined;
-
         //call next function in gameplay sequence on timer so user can read message and prepare for next question
         timer = setTimeout(function () {trivia.reset(i, answer, timer)}, 3*1000);
     },
@@ -109,6 +107,9 @@ var trivia = {
 
         //clearTimeout from function call
         clearTimeout(timer);
+
+        //clear answer value for next iteration
+        answer = undefined;
 
         //clear message for next question
         $("#m").empty()
@@ -125,4 +126,4 @@ var trivia = {
     }
 }
 
-trivia.gameStart();
+trivia.gameStart(trivia.i, trivia.answer, trivia.timer);
