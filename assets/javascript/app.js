@@ -49,8 +49,17 @@ var trivia = {
     //gamestart method to start game and initialize variables
     gameStart: function(i, answer, timer) {
 
+        //clear everything from screen if game is being restarted from previous iteration
+        $("#q").empty()
+        $("#a").empty()
+        $("#s").empty()
+        $("#m").empty()
+
+        //Add in game start button
+        $("#a").html("<button id='s'>Click To Start</button>");
+        
         //call the next function in the game sequence to print questions
-        $("#a").on("click", function() {trivia.printQuestion(i, answer, timer)});
+        $("#s").on("click", function() {trivia.printQuestion(i, answer, timer)});
     },   
 
     //printQuestion method to print each question in the questions property
@@ -71,8 +80,10 @@ var trivia = {
         //start timer to call next function in thirty seconds if user does not respond in time
         timer = setTimeout(function () {trivia.printMessage(i, answer, timer)}, 1000*10);
 
-        //receive user answer
+        //receive user answer, disable buttons and call next function
         $("button").on("click", function() {
+            $("#true").attr("disabled", "disabled");
+            $("#false").attr("disabled", "disabled");
             answer = event.target.id;
             clearTimeout(timer);
             trivia.printMessage(i, answer, timer);
@@ -83,6 +94,10 @@ var trivia = {
     printMessage: function(i, answer, timer) {
         //clearTimeout from function call
         clearTimeout(timer);
+
+        //disable buttons while message is displayed
+        $("#true").attr("disabled", "disabled");
+        $("#false").attr("disabled", "disabled");
 
         //if no answer chosen print times up answer message
         if (!answer) {
@@ -115,8 +130,25 @@ var trivia = {
         $("#m").empty()
 
         //determine if game should be iterated with next question or ended
-        if (i === trivia.q.length) {
+        if (i === trivia.q.length - 1) {
+
+            //print game over message
             $("#m").text(trivia.messages[3]);
+
+            //print reset button
+            $("#a").html("<button id='r'>Reset</button>");
+
+            //reset game when button clicked
+            $("#r").on("click", function () {
+
+                //reinitialize game input variables
+                i = 0;
+                answer = undefined;
+                timer = undefined;
+
+                //call function to restart the game
+                trivia.gameStart(trivia.i, trivia.answer, trivia.timer);
+            });
         }
 
         else if (!(i === trivia.q.length)) {
