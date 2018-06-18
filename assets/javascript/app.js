@@ -59,6 +59,7 @@ var trivia = {
         $("#a").empty()
         $("#s").empty()
         $("#m").empty()
+        $("#t").empty()
 
         //Add in game start button
         $("#a").html("<button id='s'>Click To Start</button>");
