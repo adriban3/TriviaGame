@@ -46,8 +46,13 @@ var trivia = {
     //variable for timer so that timer can be cleared if necessary
     timer: undefined,
 
+    //initialize secondary timer variables
+    timer2: undefined,
+
+    timer3: undefined,
+
     //gamestart method to start game and initialize variables
-    gameStart: function(i, answer, timer) {
+    gameStart: function(i, answer, timer, timer2, timer3) {
 
         //clear everything from screen if game is being restarted from previous iteration
         $("#q").empty()
@@ -59,11 +64,11 @@ var trivia = {
         $("#a").html("<button id='s'>Click To Start</button>");
         
         //call the next function in the game sequence to print questions
-        $("#s").on("click", function() {trivia.printQuestion(i, answer, timer)});
+        $("#s").on("click", function() {trivia.printQuestion(i, answer, timer, timer2, timer3)});
     },   
 
     //printQuestion method to print each question in the questions property
-    printQuestion: function(i, answer, timer) {
+    printQuestion: function(i, answer, timer, timer2, timer3) {
 
         //print question referencing the current iteration of the gameplay sequence
         $("#q").text(trivia.q[i]);
@@ -72,13 +77,34 @@ var trivia = {
         $("#a").html("<button id='true'>True</button> <button id='false'>False</button>");
 
         //call next function in game sequence to start timer, and receive user answer
-        trivia.startTimer(i, answer, timer);
+        trivia.startTimer(i, answer, timer, timer2, timer3);
     },
 
-    startTimer: function(i, answer, timer) {
+    startTimer: function(i, answer, timer, timer2, timer3) {
 
         //start timer to call next function in thirty seconds if user does not respond in time
-        timer = setTimeout(function () {trivia.printMessage(i, answer, timer)}, 1000*10);
+        timer = setTimeout(function () {trivia.printMessage(i, answer, timer, timer2, timer3)}, 1000*30);
+        
+        //print start timer to screen
+        $("#t").html("00:30");
+
+        //intialize clock
+        var clock = 29;
+
+        //show clock so user knows remaining time left to answer question
+        timer2 = setInterval(function() {
+
+            if (clock > 9) {
+                $("#t").html("00:" + clock);
+            }
+
+            else if(clock <=9) {
+                $("#t").html("00:0" + clock);
+            }
+
+            clock--;
+
+        }, 1000);
 
         //receive user answer, disable buttons and call next function
         $("button").on("click", function() {
@@ -86,18 +112,32 @@ var trivia = {
             $("#false").attr("disabled", "disabled");
             answer = event.target.id;
             clearTimeout(timer);
-            trivia.printMessage(i, answer, timer);
+            clearInterval(timer2);
+            trivia.printMessage(i, answer, timer, timer2, timer3);
         });
     
     },
 
-    printMessage: function(i, answer, timer) {
-        //clearTimeout from function call
+    printMessage: function(i, answer, timer, timer2, timer3) {
+        //clear timers from last function just in case
+        clearInterval(timer2);
         clearTimeout(timer);
-
+        
         //disable buttons while message is displayed
         $("#true").attr("disabled", "disabled");
         $("#false").attr("disabled", "disabled");
+
+        //print start timer to screen
+        $("#t").html("00:03");
+
+        //initialize timer
+        var clock2 = 2;
+
+        //display timer to show when next question will be displayed
+        timer3 = setInterval(function() {
+            $("#t").html("00:0" + clock2);
+            clock2--;
+        }, 1000);
 
         //if no answer chosen print times up answer message
         if (!answer) {
@@ -115,10 +155,13 @@ var trivia = {
         }
 
         //call next function in gameplay sequence on timer so user can read message and prepare for next question
-        timer = setTimeout(function () {trivia.reset(i, answer, timer)}, 3*1000);
+        timer = setTimeout(function () {
+            clearInterval(timer3);
+            trivia.reset(i, answer, timer, timer2, timer3)
+        }, 3*1000);
     },
 
-    reset: function(i, answer, timer) {
+    reset: function(i, answer, timer, timer2, timer3) {
 
         //clearTimeout from function call
         clearTimeout(timer);
@@ -145,17 +188,19 @@ var trivia = {
                 i = 0;
                 answer = undefined;
                 timer = undefined;
+                timer2 = undefined;
+                timer3 = undefined;
 
                 //call function to restart the game
-                trivia.gameStart(trivia.i, trivia.answer, trivia.timer);
+                trivia.gameStart(trivia.i, trivia.answer, trivia.timer, trivia.timer2, trivia.timer3);
             });
         }
 
         else if (!(i === trivia.q.length)) {
             i++;
-            trivia.printQuestion(i, answer, timer);
+            trivia.printQuestion(i, answer, timer, timer2, timer3);
         }
     }
 }
 
-trivia.gameStart(trivia.i, trivia.answer, trivia.timer);
+trivia.gameStart(trivia.i, trivia.answer, trivia.timer, trivia.timer2, trivia.timer3);
