@@ -51,8 +51,11 @@ var trivia = {
 
     timer3: undefined,
 
+    //empty arr to store correct or incorrect for each question
+    ansArr: [],
+
     //gamestart method to start game and initialize variables
-    gameStart: function(i, answer, timer, timer2, timer3) {
+    gameStart: function(i, answer, timer, timer2, timer3, ansArr) {
 
         //clear everything from screen if game is being restarted from previous iteration
         $("#q").empty()
@@ -65,11 +68,11 @@ var trivia = {
         $("#a").html("<button id='s'>Click To Start</button>");
         
         //call the next function in the game sequence to print questions
-        $("#s").on("click", function() {trivia.printQuestion(i, answer, timer, timer2, timer3)});
+        $("#s").on("click", function() {trivia.printQuestion(i, answer, timer, timer2, timer3, ansArr)});
     },   
 
     //printQuestion method to print each question in the questions property
-    printQuestion: function(i, answer, timer, timer2, timer3) {
+    printQuestion: function(i, answer, timer, timer2, timer3, ansArr) {
 
         //print question referencing the current iteration of the gameplay sequence
         $("#q").text(trivia.q[i]);
@@ -78,13 +81,13 @@ var trivia = {
         $("#a").html("<button id='true'>True</button> <button id='false'>False</button>");
 
         //call next function in game sequence to start timer, and receive user answer
-        trivia.startTimer(i, answer, timer, timer2, timer3);
+        trivia.startTimer(i, answer, timer, timer2, timer3, ansArr);
     },
 
-    startTimer: function(i, answer, timer, timer2, timer3) {
+    startTimer: function(i, answer, timer, timer2, timer3, ansArr) {
 
         //start timer to call next function in thirty seconds if user does not respond in time
-        timer = setTimeout(function () {trivia.printMessage(i, answer, timer, timer2, timer3)}, 1000*30);
+        timer = setTimeout(function () {trivia.printMessage(i, answer, timer, timer2, timer3, ansArr)}, 1000*30);
         
         //print start timer to screen
         $("#t").html("00:30");
@@ -114,12 +117,12 @@ var trivia = {
             answer = event.target.id;
             clearTimeout(timer);
             clearInterval(timer2);
-            trivia.printMessage(i, answer, timer, timer2, timer3);
+            trivia.printMessage(i, answer, timer, timer2, timer3, ansArr);
         });
     
     },
 
-    printMessage: function(i, answer, timer, timer2, timer3) {
+    printMessage: function(i, answer, timer, timer2, timer3, ansArr) {
         //clear timers from last function just in case
         clearInterval(timer2);
         clearTimeout(timer);
@@ -142,27 +145,30 @@ var trivia = {
 
         //if no answer chosen print times up answer message
         if (!answer) {
+            ansArr.push("x");
             $("#m").text(trivia.messages[2]);
         }
 
         //if correct answer print correct answer message
         else if (answer === trivia.a[i]) {
+            ansArr.push("c");
             $("#m").text(trivia.messages[0]);
         }
 
         //if incorrect answer print incorrect answer message
         else if (answer && !(answer === trivia.a[i])) {
+            ansArr.push("x");
             $("#m").text(trivia.messages[1]);
         }
 
         //call next function in gameplay sequence on timer so user can read message and prepare for next question
         timer = setTimeout(function () {
             clearInterval(timer3);
-            trivia.reset(i, answer, timer, timer2, timer3)
+            trivia.reset(i, answer, timer, timer2, timer3, ansArr)
         }, 3*1000);
     },
 
-    reset: function(i, answer, timer, timer2, timer3) {
+    reset: function(i, answer, timer, timer2, timer3, ansArr) {
 
         //clearTimeout from function call
         clearTimeout(timer);
@@ -176,11 +182,35 @@ var trivia = {
         //determine if game should be iterated with next question or ended
         if (i === trivia.q.length - 1) {
 
-            //print game over message
-            $("#m").text(trivia.messages[3]);
+            //Empty DOM, print "Results" title
+            $("#a").empty();
+
+            $("#t").empty();
+
+            $("#q").html("Results");
+
+            //counter for number of correct answers
+            var c = 0;
+
+            //add list of questions and whether correct or incorrect
+            trivia.q.forEach(function(item, index) {
+                if (ansArr[index] === "x") {
+                    $("#a").append("<div class='x'>" + trivia.q[index] + ": " + trivia.a[index] + "</div><br>");
+                    $(".x").css({"color": "red", "text-decoration": "line-through red"});
+                }
+
+                else if (ansArr[index] === "c") {
+                    $("#a").append("<div class='c'>" + trivia.q[index] + ": " + trivia.a[index] + "</div><br>");
+                    $(".c").css({"color": "green"});
+                    c++
+                }
+            })
+
+            //Users Score
+            $("#a").append("<div>Score" + c + "/10</div><br>");
 
             //print reset button
-            $("#a").html("<button id='r'>Reset</button>");
+            $("#a").append("<button id='r'>Reset</button>");
 
             //reset game when button clicked
             $("#r").on("click", function () {
@@ -191,17 +221,18 @@ var trivia = {
                 timer = undefined;
                 timer2 = undefined;
                 timer3 = undefined;
+                ansArr = [];
 
                 //call function to restart the game
-                trivia.gameStart(trivia.i, trivia.answer, trivia.timer, trivia.timer2, trivia.timer3);
+                trivia.gameStart(i, answer, timer, timer2, timer3, ansArr);
             });
         }
 
         else if (!(i === trivia.q.length)) {
             i++;
-            trivia.printQuestion(i, answer, timer, timer2, timer3);
+            trivia.printQuestion(i, answer, timer, timer2, timer3, ansArr);
         }
     }
 }
 
-trivia.gameStart(trivia.i, trivia.answer, trivia.timer, trivia.timer2, trivia.timer3);
+trivia.gameStart(trivia.i, trivia.answer, trivia.timer, trivia.timer2, trivia.timer3, trivia.ansArr);
