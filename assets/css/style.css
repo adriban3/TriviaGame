@@ -5,3 +5,18 @@
     text-align: center;
     align-items: center;
 }
+
+#q {
+    font-size: 4rem;
+    margin-bottom: 5%;
+}
+
+#m {
+    font-size: 2rem;
+}
+
+#t {
+    font-family: monospace;
+    font-size: 3rem;
+    color: green;
+}

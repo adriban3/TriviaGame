@@ -64,8 +64,10 @@ var trivia = {
         $("#m").empty()
         $("#t").empty()
 
+        //game start message
+        $("#q").html("Click The Button To Start")
         //Add in game start button
-        $("#a").html("<button id='s'>Click To Start</button>");
+        $("#a").html("<button id='s' class='btn btn-primary'>Click To Start</button>");
         
         //call the next function in the game sequence to print questions
         $("#s").on("click", function() {trivia.printQuestion(i, answer, timer, timer2, timer3, ansArr)});
@@ -78,7 +80,7 @@ var trivia = {
         $("#q").text(trivia.q[i]);
 
         //display true/false buttons for user response
-        $("#a").html("<button id='true'>True</button> <button id='false'>False</button>");
+        $("#a").html("<button id='true' class='btn btn-success'>True</button> <button id='false' class='btn btn-danger'>False</button>");
 
         //call next function in game sequence to start timer, and receive user answer
         trivia.startTimer(i, answer, timer, timer2, timer3, ansArr);
@@ -210,7 +212,7 @@ var trivia = {
             $("#a").append("<div>Score" + c + "/10</div><br>");
 
             //print reset button
-            $("#a").append("<button id='r'>Reset</button>");
+            $("#a").append("<button id='r' class='btn btn-primary'>Reset</button>");
 
             //reset game when button clicked
             $("#r").on("click", function () {
