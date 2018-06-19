@@ -3,26 +3,26 @@ var trivia = {
 
     //define questions sub-object
     q: [
-        "question 0",
-        "question 1",
-        "question 2",
-        "question 3",
-        "question 4",
-        "question 5",
-        "question 6",
-        "question 7",
-        "question 8",
-        "question 9",
+        "1. According to Prison Mike, dementors are the worst thing about prison.  True or false?",
+        "2. Michael's online dating profile username is 'LittleKidLover.'  True or false?",
+        "3. Jan's child's name is Assturd.  True or false?",
+        "4. Senor Loadenstein was the name of Dunder Mifflin's first customer.  True or false?",
+        "5. 'Break me off a piece of that football cream,' is the slogan for a well known candybar.  True or false?",
+        "6. Jim puts Dwight's stapler in jello.  True or false?",
+        "7. Kevin Malone won an event in the World Series of Poker.  True or false?",
+        "8. The battle of Shrute forms was the northernmost battle of the civil war.  True or false?",
+        "9. Black bears are the best type of bear.  True or false?",
+        "10. Pam suffers from spontaneous dental hydroplosion which causes her teeth to turn into liquid and drip down her throat.  True or false?",
     ],
 
     //define answers sub-object
     a: [
         "true",
-        "false",
         "true",
         "false",
-        "true",
         "false",
+        "false",
+        "true",
         "true",
         "false",
         "true",
@@ -65,7 +65,7 @@ var trivia = {
         $("#t").empty()
 
         //game start message
-        $("#q").html("Click The Button To Start")
+        $("#q").html("<h1>Click The Button To Start</h1>")
         //Add in game start button
         $("#a").html("<button id='s' class='btn btn-primary'>Click To Start</button>");
         
@@ -148,18 +148,21 @@ var trivia = {
         //if no answer chosen print times up answer message
         if (!answer) {
             ansArr.push("x");
+            $("#m").css({"color" : "red"});
             $("#m").text(trivia.messages[2]);
         }
 
         //if correct answer print correct answer message
         else if (answer === trivia.a[i]) {
             ansArr.push("c");
+            $("#m").css({"color" : "green"});
             $("#m").text(trivia.messages[0]);
         }
 
         //if incorrect answer print incorrect answer message
         else if (answer && !(answer === trivia.a[i])) {
             ansArr.push("x");
+            $("#m").css({"color" : "red"});
             $("#m").text(trivia.messages[1]);
         }
 
@@ -209,7 +212,7 @@ var trivia = {
             })
 
             //Users Score
-            $("#a").append("<div>Score" + c + "/10</div><br>");
+            $("#a").append("<div id='score'>Score " + c + "/10</div><br>");
 
             //print reset button
             $("#a").append("<button id='r' class='btn btn-primary'>Reset</button>");

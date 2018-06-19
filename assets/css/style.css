@@ -7,16 +7,47 @@
 }
 
 #q {
-    font-size: 4rem;
+    font-size: 2rem;
     margin-bottom: 5%;
+    color: white;
+    -webkit-text-stroke: 1px black;
 }
 
 #m {
     font-size: 2rem;
+    color: white;
+    -webkit-text-stroke: 1px black;
 }
 
 #t {
     font-family: monospace;
     font-size: 3rem;
     color: green;
+}
+
+body {
+    background-image: url("../images/Office_S9_Promotional_Poster.jpg");
+    background-size: cover;
+    font-family: 'Bitter', 'serif';
+}
+
+.trans {
+    background: rgba(208, 208, 208, .3);
+    border: solid black;
+}
+
+#score {
+    font-size: 2rem;
+    color: white;
+    -webkit-text-stroke: 1px black;
+}
+
+.c {
+    font-size: 1.5rem;
+    -webkit-text-stroke: 1px black;
+}
+
+.x {
+    font-size: 1.5rem;
+    -webkit-text-stroke: 1px black;
 }
