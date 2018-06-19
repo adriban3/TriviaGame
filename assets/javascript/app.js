@@ -200,12 +200,12 @@ var trivia = {
             //add list of questions and whether correct or incorrect
             trivia.q.forEach(function(item, index) {
                 if (ansArr[index] === "x") {
-                    $("#a").append("<div class='x'>" + trivia.q[index] + ": " + trivia.a[index] + "</div><br>");
+                    $("#a").append("<div class='x'>" + trivia.q[index] + "  Correct answer: " + trivia.a[index] + ".</div><br>");
                     $(".x").css({"color": "red", "text-decoration": "line-through red"});
                 }
 
                 else if (ansArr[index] === "c") {
-                    $("#a").append("<div class='c'>" + trivia.q[index] + ": " + trivia.a[index] + "</div><br>");
+                    $("#a").append("<div class='c'>" + trivia.q[index] + "  Correct answer: " + trivia.a[index] + ".</div><br>");
                     $(".c").css({"color": "green"});
                     c++
                 }
